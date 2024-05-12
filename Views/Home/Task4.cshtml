@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "task4";
+}
+
+@model Task4ViewModel
+
+<div class="container mt-5 flex-grow-1">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="login-form">
+                <h2 class="text-center mb-2">Task 3</h2>
+                <p class="text-center">
+                    Пользователь вводит предложение, в котором имеется несколько
+                    букв Я. Найти порядковый номер первой из них и порядковый
+                    номер последней из них. Обработать информирование об
+                    отсутствии букв Я.
+                </p>
+                <form method="post" asp-controller="Home" asp-action="Task4">
+                    <div class="mb-3">
+                        @Html.TextBoxFor(m => m.Text, new { @class = "form-control", rows = "3", type = "text", placeholder = "Введите предложение" })
+                    </div>
+                    @if (Model != null && !string.IsNullOrEmpty(Model.ResultMessage))
+                    {
+                        <div class="alert alert-primary" role="alert">
+                            @Html.Raw(Model.ResultMessage)
+                        </div>
+                    }
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-outline-success btn-lg w-100">Результат</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
