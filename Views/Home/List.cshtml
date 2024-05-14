@@ -1,0 +1,20 @@
+﻿
+@model dynamic
+
+<div class="col-md-6 mb-2">
+    <div class="login-form">
+        <h2 class="text-center mb-2">Список <small>(@Model.Students[0].Group)</small></h2>
+        <div class="list-group">
+           @foreach (var student in Model.Students)
+            {
+                <div class="item-list mb-3">
+                    <h5 class="m-0">@student.Surname @student.Name  @student.Patronymic</h5>
+                    <small>@student.Email</small> <br>
+                    <small>@student.Number</small>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+        

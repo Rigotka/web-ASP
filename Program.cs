@@ -1,7 +1,9 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using lab1.Services;
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IStudentService, StudentService>();
 
 var app = builder.Build();
 
@@ -22,7 +24,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Task3}/");
+    pattern: "{controller=Home}/{action=Index}/");
 
 app.Run();
 

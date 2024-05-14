@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "task3";
+    var newStudent = Model.NewStudent;
+}
+
+@model StudentsViewModel
+
+<div class="container mt-5 flex-grow-1">
+    <div class="row justify-content-center">
+        @await Html.PartialAsync("List", Model)
+        <div class="col-md-6">
+            <div class="login-form">
+                <h2 class="text-center mb-2">Добавить</h2>
+                <form method="post" asp-controller="Home" asp-action="Add">
+                    <input type="hidden" name="previousGroup" value="@Model.Group" />
+                    <div class="form-group mb-3">
+                        <input id="surname" class="form-control" name="surname" type="text" placeholder="Фамилия" value="@newStudent.Surname">
+                    </div>
+                    <div class="form-group mb-3">
+                        <input id="name" class="form-control" name="name" type="text" placeholder="Имя" value="@newStudent.Name">
+                    </div>
+                    <div class="form-group mb-3">
+                        <input id="patronymic" class="form-control" name="patronymic" type="text" placeholder="Отчетсво" value="@newStudent.Patronymic">
+                    </div>
+                    <div class="form-group mb-3">
+                        <input id="group" class="form-control" name="group" type="text" placeholder="Группа" value="@newStudent.Group">
+                    </div>
+                    <div class="form-group mb-3">
+                        <input id="email" class="form-control" name="email" type="text" placeholder="Email" value="@newStudent.Email">
+                    </div>
+                    <div class="form-group mb-3">
+                        <input id="number" class="form-control" name="number" type="text" placeholder="Номер телефона" value="@newStudent.Number">
+                    </div>
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            @Html.ValidationSummary()
+                        </div>
+                    }
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["Message"]
+                        </div>
+                    }
+                    <div class="form-group mb-3">
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-outline-success btn-lg">Добавить</button>
+                            <div>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" onclick="fillFormWithTestData()">Заполнить</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" onclick="lecturer()">Преподаватель</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

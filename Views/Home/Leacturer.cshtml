@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "task3";
+}
+
+@model List<LeacturerViewModel>
+
+<div class="container mt-5 flex-grow-1">
+    @*<div class="row justify-content-center">*@
+        @foreach (var viewModel in Model)
+        {
+            @await Html.PartialAsync("List", viewModel)
+        }
+    @*</div>*@
+</div>

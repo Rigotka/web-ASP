@@ -1,5 +1,13 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function fillFormWithTestData() {
+    document.getElementById('surname').value = 'Сорокин';
+    document.getElementById('name').value = 'Сергей';
+    document.getElementById('group').value = '571-2';
+    document.getElementById('email').value = 'test@example.com';
+    document.getElementById('number').value = '87777777777';
+}
 
-// Write your JavaScript code.
-
+function lecturer() {
+    document.getElementById('surname').value = 'Мурзин';
+    document.getElementById('name').value = 'Евгений';
+    document.getElementById('patronymic').value = 'Сергеевич';
+}

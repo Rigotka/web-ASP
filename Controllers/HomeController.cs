@@ -1,100 +1,81 @@
-﻿using System.Diagnostics;
+﻿using lab1.Models;
+using lab1.Services;
 using Microsoft.AspNetCore.Mvc;
-using lab1.Models;
 
 namespace lab1.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly IStudentService _studentService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IStudentService studentService)
     {
-        _logger = logger;
+        _studentService = studentService;
     }
 
-    public IActionResult Index()
+    public IActionResult Leacturer()
     {
-        return View();
+        var viewModels = new List<LeacturerViewModel>();
+
+        var groups = _studentService.GetAllGroups();
+        foreach(var group in groups)
+        {
+            var students = _studentService.GetStudentsByGroup(group);
+            var viewModel = new LeacturerViewModel
+            {
+                Students = students,
+            };
+            viewModels.Add(viewModel);
+        }
+
+
+        ViewData["Groups"] = groups;
+        return View(viewModels);
     }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
 
     [HttpGet]
-    public IActionResult Task3()
+    public IActionResult Index(string group = "571-1")
     {
-        var viewModel = new Task3ViewModel
-        {
-            N = 1,
-            M = 1, 
-            ResultMessage = ""
-        };
-
+        var viewModel = CreateStudentsViewModel(group, new Student());
         return View(viewModel);
     }
 
     [HttpPost]
-    public IActionResult Task3(Task3ViewModel viewModel)
+    public ActionResult Add(Student student, string previousGroup)
     {
-        if (viewModel.N == 0 || viewModel.M == 0)
+        if(student.Surname == "Мурзин" && student.Name == "Евгений" && student.Patronymic == "Сергеевич")
         {
-            viewModel.ResultMessage = "Ошибка: N и M не может быть равны нулю.";
-        }
-        else
-        {
-            bool isMultiple = viewModel.M % viewModel.N == 0;
-            viewModel.ResultMessage = isMultiple ? "Число N кратно числу M" : "Число N не кратно числу M";
+            return RedirectToAction("Leacturer");
         }
 
-        return View(viewModel);
+        if (ModelState.IsValid)
+        {
+            if(_studentService.Add(student))
+            {
+                var group = student.Group;
+                return RedirectToAction("Index", new { group = group });
+            }
+            TempData["Message"] = "Студент с такими данными уже существует.";
+        }
+
+        var viewModel = CreateStudentsViewModel(previousGroup, student);
+        return View("Index", viewModel);
     }
 
-    [HttpGet]
-    public IActionResult Task4()
+    public StudentsViewModel CreateStudentsViewModel(string group, Student student)
     {
-        var viewModel = new Task4ViewModel
+        ViewData["Groups"] = _studentService.GetAllGroups();
+
+        var students = _studentService.GetStudentsByGroup(group);
+        var viewModel = new StudentsViewModel
         {
-            Text = "",
-            firstIndex = -1,
-            lastIndex = -1
+            Students = students,
+            NewStudent = student,
+            Group = group
+
         };
-
-        return View(viewModel);
-    }
-
-    [HttpPost]
-    public IActionResult Task4(Task4ViewModel viewModel)
-    {
-        string text = viewModel.Text;
-        if(string.IsNullOrEmpty(text))
-        {
-            viewModel.ResultMessage = "Ошибка! Введите предложение.";
-            return View(viewModel);
-        }
-
-        string lowerText = text.ToLower();
-        int firstIndex = lowerText.IndexOf('я');
-        int lastIndex = lowerText.LastIndexOf('я');
-        if (firstIndex == -1)
-        {
-            viewModel.ResultMessage = "В предложении нет буквы 'Я'.";
-        }
-        else
-        {
-            viewModel.ResultMessage = $"<p>Порядковый номер первой буквы 'Я': {firstIndex + 1}</p>" +
-                                      $"<p class='mb-0'>Порядковый номер последней буквы 'Я': {lastIndex + 1}</p>";
-        }
-
-        return View(viewModel);
+        return viewModel;
     }
 } 
 
